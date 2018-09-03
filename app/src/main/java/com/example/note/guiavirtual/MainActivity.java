@@ -17,14 +17,19 @@ import android.view.MenuItem;
 
 import com.example.note.guiavirtual.Equipos.AltaEquipo;
 import com.example.note.guiavirtual.Equipos.ConsultaEquipo;
+import com.example.note.guiavirtual.OTs.BlankFragment;
+import com.example.note.guiavirtual.OTs.FragOTs;
+import com.example.note.guiavirtual.OTs.FragmentOTs;
+import com.example.note.guiavirtual.OTs.FragmentOTs2;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, AltaEquipo.OnFragmentInteractionListener, ConsultaEquipo.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, AltaEquipo.OnFragmentInteractionListener, ConsultaEquipo.OnFragmentInteractionListener , FragmentOTs.OnFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -91,9 +96,12 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_Guia) {
             // Handle the camera action
-        } else if (id == R.id.nav_OT) {
+        } else if (id == R.id.nav_OTs) {
+            miFragment=new FragmentOTs();
+            fragmentSeleccionado=true;
 
         } else if (id == R.id.nav_ListaOT) {
+
 
         } else if (id == R.id.nav_AltaEquipos) {
             miFragment=new AltaEquipo();

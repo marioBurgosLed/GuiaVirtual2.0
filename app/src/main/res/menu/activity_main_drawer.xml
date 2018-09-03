@@ -6,8 +6,8 @@
             android:id="@+id/nav_Guia"
             android:title="Guia Virtual" />
         <item
-            android:id="@+id/nav_OT"
-            android:title="Pedir OTs" />
+            android:id="@+id/nav_OTs"
+            android:title="Generar OTs" />
         <item
             android:id="@+id/nav_ListaOT"
             android:icon="@drawable/ic_menu_manage"

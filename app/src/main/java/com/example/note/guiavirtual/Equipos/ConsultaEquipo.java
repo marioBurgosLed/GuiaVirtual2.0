@@ -165,7 +165,7 @@ public class ConsultaEquipo extends Fragment {
         btEliminar=(Button)vista.findViewById(R.id.btEliminar);
        // txtPrueba=(TextView)vista.findViewById(R.id.txtPrueba);
         //cnsxkcnxzk
-        
+
 
         request= Volley.newRequestQueue(getContext());
 

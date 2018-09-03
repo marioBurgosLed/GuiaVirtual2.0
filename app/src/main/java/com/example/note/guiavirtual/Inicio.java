@@ -87,7 +87,7 @@ public class Inicio extends Activity {
                         int idRol=person.getInt("idRol");
 
                         if(contra.equals(etPass.getText().toString())){
-                            Toast.makeText(getApplicationContext(),"J=1",Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(),"J=1",Toast.LENGTH_SHORT).show();
                             j=1;
                         }
 
