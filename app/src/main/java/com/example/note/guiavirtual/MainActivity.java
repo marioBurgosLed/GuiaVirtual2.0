@@ -17,10 +17,7 @@ import android.view.MenuItem;
 
 import com.example.note.guiavirtual.Equipos.AltaEquipo;
 import com.example.note.guiavirtual.Equipos.ConsultaEquipo;
-import com.example.note.guiavirtual.OTs.BlankFragment;
-import com.example.note.guiavirtual.OTs.FragOTs;
 import com.example.note.guiavirtual.OTs.FragmentOTs;
-import com.example.note.guiavirtual.OTs.FragmentOTs2;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AltaEquipo.OnFragmentInteractionListener, ConsultaEquipo.OnFragmentInteractionListener , FragmentOTs.OnFragmentInteractionListener{

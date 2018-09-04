@@ -1,5 +1,6 @@
 package com.example.note.guiavirtual.OTs;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,10 +10,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.note.guiavirtual.R;
 
+import org.json.JSONObject;
+
 import java.util.Calendar;
+
+import static org.json.JSONObject.NULL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,7 +34,7 @@ import java.util.Calendar;
  * Use the {@link FragmentOTs#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentOTs extends Fragment {
+public class FragmentOTs extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -35,6 +47,10 @@ public class FragmentOTs extends Fragment {
     EditText etIdEquipo,etDetalle, etFecha,etTipo, etEstado, etUsu;
     Button btEscanear, btGenerarOT;
     int dia,mes,anio;
+
+    ProgressDialog progreso;
+    RequestQueue request;
+    JsonObjectRequest jsonObjectRequest;
 
     private OnFragmentInteractionListener mListener;
 
@@ -84,6 +100,8 @@ public class FragmentOTs extends Fragment {
         btEscanear=(Button) vista.findViewById(R.id.btScan);
         btGenerarOT=(Button) vista.findViewById(R.id.btAltaOT);
 
+        request= Volley.newRequestQueue(getContext());
+
         btGenerarOT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,11 +111,10 @@ public class FragmentOTs extends Fragment {
                     dia=c.get(Calendar.DAY_OF_MONTH);
                     mes=c.get(Calendar.MONTH);
                     anio=c.get(Calendar.YEAR);
-                    etFecha.setText(dia+"/"+mes+"/"+anio);
+                    etFecha.setText(anio+"-"+mes+"-"+dia);
 
                     //etUsu.setText(idUsuariooo);
                     //Toast.makeText(getContext(),"Valor en Fragment: "+idUsuariooo,Toast.LENGTH_SHORT).show();
-
                 }
                 GenerarOT();
             }
@@ -108,6 +125,39 @@ public class FragmentOTs extends Fragment {
     }
 
     private void GenerarOT() {
+
+        String urlAltaOT = "http://sigequip.esy.es/OTs/AltaOT.php?descOT=" + etDetalle.getText().toString()+
+                                                        "&idUsuario=" + etUsu.getText().toString()+
+                                                        "&idEquipo=" + etIdEquipo.getText().toString() +
+                                                        "&idEstado=" + etEstado.getText().toString() +
+                                                        "&fechaOT=" + etFecha.getText().toString() +
+                                                        "&idTipo=" + etTipo.getText().toString();
+
+
+
+        urlAltaOT=urlAltaOT.replace(" ","%20");
+
+        jsonObjectRequest=new JsonObjectRequest(Request.Method.POST, urlAltaOT, null,this,this);
+        if(jsonObjectRequest!=NULL){
+        request.add(jsonObjectRequest);}
+        else {        Toast.makeText(getContext(),"No funciona...",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onResponse(JSONObject response) {
+        Toast.makeText(getContext(),"Se guardó el registro...",Toast.LENGTH_LONG).show();
+        etDetalle.setText("");
+        etUsu.setText("");
+        etIdEquipo.setText("");
+        etEstado.setText("0");
+        etFecha.setText("");
+        etTipo.setText("0");
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        Toast.makeText(getContext(),"Se produjo un error..."+error.toString(),Toast.LENGTH_LONG).show();
 
     }
 
