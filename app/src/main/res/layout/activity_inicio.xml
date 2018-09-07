@@ -72,6 +72,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:inputType="textPersonName"
+                android:password="true"
                 android:text="tec" />
 
         </LinearLayout>
@@ -79,15 +80,27 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="214dp"
-            android:orientation="vertical"
             tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="8dp">
+            tools:layout_editor_absoluteY="8dp"
+            android:weightSum="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.37" />
 
             <Button
                 android:id="@+id/btIngresar"
                 android:layout_width="match_parent"
-                android:layout_height="85dp"
-                android:text="Ingresar" />
+                android:layout_height="wrap_content"
+                android:layout_weight="0.14"
+                android:background="@color/common_google_signin_btn_text_dark_focused"
+                android:elevation="7dp"
+                android:text="Ingresar"
+                android:textColor="@color/common_google_signin_btn_text_dark_default"
+                android:textSize="30dp" />
         </LinearLayout>
 
     </LinearLayout>

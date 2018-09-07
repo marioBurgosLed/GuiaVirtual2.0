@@ -2,7 +2,9 @@ package com.example.note.guiavirtual;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,10 +18,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.example.note.guiavirtual.OTs.EnviarMensaje;
+import com.example.note.guiavirtual.OTs.FragmentOTs;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import static com.example.note.guiavirtual.R.id.fragmentOTID;
 
 public class Inicio extends Activity {
 
@@ -37,7 +43,9 @@ public class Inicio extends Activity {
     private EditText etUsuario, etPass;
     private String jsonResponse;
     private TextView txtResponse;
-    int aux,auxRol;
+    int auxUsuInicio,auxRolInicio;
+    String nombreUsuario;
+
 
 
     @Override
@@ -87,16 +95,28 @@ public class Inicio extends Activity {
                         int idRol=person.getInt("idRol");
 
                         if(contra.equals(etPass.getText().toString())){
-                            //Toast.makeText(getApplicationContext(),"J=1",Toast.LENGTH_SHORT).show();
+                            auxUsuInicio=idUsuario;
+                            auxRolInicio=idRol;
+                            nombreUsuario=nomb;
                             j=1;
                         }
 
                     }
                     if(j==1){
-                        Toast.makeText(getApplicationContext(),"Bienvenido",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"Bienvenido usuario: "+ nombreUsuario + "  IdUsuario: "+auxUsuInicio,Toast.LENGTH_SHORT).show();
                         Intent intent=new Intent(Inicio.this,MainActivity.class);
+                        intent.putExtra("Usuario",auxUsuInicio);
+                        intent.putExtra("Rol",auxRolInicio);
                         startActivity(intent);
                         j=0;
+
+                        SharedPreferences prefs = getSharedPreferences("Preferences", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putInt("USUARIOSSS", auxUsuInicio);
+                        editor.putInt("ROLLL", auxRolInicio);
+                        editor.commit();
+
+
                     }else{
                         Toast.makeText(getApplicationContext(),"verifique su contraseña",Toast.LENGTH_SHORT).show();
                     }
@@ -134,5 +154,7 @@ public class Inicio extends Activity {
         if (pDialog.isShowing())
             pDialog.dismiss();
     }
+
+
 }
 

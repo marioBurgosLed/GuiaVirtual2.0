@@ -2,6 +2,7 @@ package com.example.note.guiavirtual.OTs;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.note.guiavirtual.MainActivity;
 import com.example.note.guiavirtual.R;
 
 import org.json.JSONObject;
@@ -31,22 +33,24 @@ import static org.json.JSONObject.NULL;
  * Activities that contain this fragment must implement the
  * {@link FragmentOTs.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link FragmentOTs#newInstance} factory method to
+ * factory method to
  * create an instance of this fragment.
  */
 public class FragmentOTs extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener {
-    // TODO: Rename parameter arguments, choose names that match
+  /*  // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
-    private String mParam2;
+    private String mParam2;*/
 
     EditText etIdEquipo,etDetalle, etFecha,etTipo, etEstado, etUsu;
     Button btEscanear, btGenerarOT;
+    View rootView;
     int dia,mes,anio;
+    int auxUsuFragment, auxUsuRol,x;
 
     ProgressDialog progreso;
     RequestQueue request;
@@ -58,14 +62,9 @@ public class FragmentOTs extends Fragment implements Response.Listener<JSONObjec
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentOTs.
-     */
+    /*
+
+
     // TODO: Rename and change types and number of parameters
     public static FragmentOTs newInstance(String param1, String param2) {
         FragmentOTs fragment = new FragmentOTs();
@@ -74,20 +73,28 @@ public class FragmentOTs extends Fragment implements Response.Listener<JSONObjec
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
+    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+
+            //score=getArguments().getInt("USUARIOSSS",10);
+
+
+          /*  mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);*/
+            //auxUsuFragment=getArguments().getInt("SCORE",3);
+           // etUsu.setText(auxUsuFragment);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        //((MainActivity)getActivity()).setActionBarTitle("Menú Ordenes de Trabajo");
         // Inflate the layout for this fragment
         View vista= inflater.inflate(R.layout.fragment_fragment_ots, container, false);
 
@@ -100,7 +107,24 @@ public class FragmentOTs extends Fragment implements Response.Listener<JSONObjec
         btEscanear=(Button) vista.findViewById(R.id.btScan);
         btGenerarOT=(Button) vista.findViewById(R.id.btAltaOT);
 
+        etEstado.setText("0");
+        etTipo.setText("0");
+
         request= Volley.newRequestQueue(getContext());
+
+        SharedPreferences prefs = getActivity().getSharedPreferences("Preferences", 0);
+        auxUsuFragment = prefs.getInt("USUARIOSSS", 0);
+        auxUsuRol = prefs.getInt("ROLLL", 0);
+
+        btEscanear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(),"Recibió en Fragment..."+auxUsuFragment,Toast.LENGTH_LONG).show();
+
+
+            }
+        });
+
 
         btGenerarOT.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,8 +137,7 @@ public class FragmentOTs extends Fragment implements Response.Listener<JSONObjec
                     anio=c.get(Calendar.YEAR);
                     etFecha.setText(anio+"-"+mes+"-"+dia);
 
-                    //etUsu.setText(idUsuariooo);
-                    //Toast.makeText(getContext(),"Valor en Fragment: "+idUsuariooo,Toast.LENGTH_SHORT).show();
+                   // etUsu.setText(auxUsuFragment);
                 }
                 GenerarOT();
             }
@@ -124,10 +147,11 @@ public class FragmentOTs extends Fragment implements Response.Listener<JSONObjec
         return vista;
     }
 
+
     private void GenerarOT() {
 
         String urlAltaOT = "http://sigequip.esy.es/OTs/AltaOT.php?descOT=" + etDetalle.getText().toString()+
-                                                        "&idUsuario=" + etUsu.getText().toString()+
+                                                        "&idUsuario=" + auxUsuFragment +
                                                         "&idEquipo=" + etIdEquipo.getText().toString() +
                                                         "&idEstado=" + etEstado.getText().toString() +
                                                         "&fechaOT=" + etFecha.getText().toString() +
@@ -198,5 +222,9 @@ public class FragmentOTs extends Fragment implements Response.Listener<JSONObjec
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void recibir(int msg){
+        etUsu.setText(msg);
     }
 }

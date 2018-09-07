@@ -1,5 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragmentOTID"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.note.guiavirtual.OTs.FragmentOTs">
@@ -56,8 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="0" />
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/etIdEstado"
@@ -65,8 +65,7 @@
             android:layout_height="wrap_content"
             android:elevation="1dp"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="0" />
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/etIdUsuario"
@@ -74,26 +73,23 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="idUsuario"
             android:visibility="invisible" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btScan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Escanear nro equipo" />
+                android:layout_width="175dp"
+                android:layout_height="86dp"
+                android:text="Escanear codigo de barras" />
 
             <Button
                 android:id="@+id/btAltaOT"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_width="175dp"
+                android:layout_height="77dp"
                 android:text="generar ot" />
 
         </LinearLayout>
