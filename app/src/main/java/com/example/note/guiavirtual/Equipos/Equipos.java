@@ -10,6 +10,7 @@ public class Equipos {
     private String Marca;
     private String Modelo;
     private String Serie;
+    private Integer RA;
 
     public Integer getID() {
         return ID;
@@ -49,5 +50,13 @@ public class Equipos {
 
     public void setSerie(String serie) {
         Serie = serie;
+    }
+
+    public Integer getRA() {
+        return RA;
+    }
+
+    public void setRA(Integer RA) {
+        this.RA = RA;
     }
 }

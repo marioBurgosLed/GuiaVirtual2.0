@@ -220,6 +220,7 @@ public class ConsultaEquipo extends Fragment {
                     miEquipo.setMarca(jsonObject.optString("Marca"));
                     miEquipo.setModelo(jsonObject.optString("Modelo"));
                     miEquipo.setSerie(jsonObject.optString("Serie"));
+                    //miEquipo.setRA(jsonObject.optInt("RA"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -252,8 +253,7 @@ public class ConsultaEquipo extends Fragment {
         pDialog.setMessage("Cargando...");
         pDialog.show();
 
-
-        String urlActualiza="http://sigequip.esy.es/actualizarEquipo2.php";
+        String urlActualiza="http://sigequip.esy.es/Equipos/Update.php";
 
         StringRequest stringRequest=new StringRequest(Request.Method.POST, urlActualiza, new Response.Listener<String>() {
             @Override
@@ -283,17 +283,20 @@ public class ConsultaEquipo extends Fragment {
                 String mo = etModelo.getText().toString();
                 String se = etSerie.getText().toString();
 
+
                 Map<String, String> parametros = new HashMap<>();
                 parametros.put("idEquipo", id);
                 parametros.put("Descripcion", desc);
                 parametros.put("Marca", ma);
                 parametros.put("Modelo", mo);
                 parametros.put("Serie", se);
+                parametros.put("RA","1");
 
                 return parametros;
 
             }
         };
+
         //request.add(stringRequest);
         VolleySingleton.getIntanciaVolley(getContext()).addToRequestQueue(stringRequest);
     }
@@ -340,7 +343,9 @@ public class ConsultaEquipo extends Fragment {
                 pDialog.hide();
             }
         });
-        //request.add(stringRequest);
+
+
+        request.add(stringRequest);
         VolleySingleton.getIntanciaVolley(getContext()).addToRequestQueue(stringRequest);
     }
 
@@ -355,6 +360,51 @@ public class ConsultaEquipo extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
+    private void webServiceEliminar2(){
+        pDialog=new ProgressDialog(getContext());
+        pDialog.setMessage("Cargando...");
+        pDialog.show();
+
+
+        String urlActualiza="http://sigequip.esy.es/actualizarEquipo2.php";
+
+        StringRequest stringRequest=new StringRequest(Request.Method.POST, urlActualiza, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                pDialog.hide();
+
+                if (response.trim().equalsIgnoreCase("actualiza")){
+                    Toast.makeText(getContext(),"Baja del equipo con exito",Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getContext(),"Error en intento de baja ",Toast.LENGTH_SHORT).show();
+                    Log.i("RESPUESTA: ",""+response);
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getContext(),"..."+error.toString(),Toast.LENGTH_SHORT).show();
+                pDialog.hide();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                String id = etID.getText().toString();
+
+
+                Map<String, String> parametros = new HashMap<>();
+                parametros.put("idEquipo", id);
+                //                                  FALTA MODIFICAR VARIABLES
+
+                return parametros;
+
+            }
+        };
+        //request.add(stringRequest);
+        VolleySingleton.getIntanciaVolley(getContext()).addToRequestQueue(stringRequest);
+
+    }
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

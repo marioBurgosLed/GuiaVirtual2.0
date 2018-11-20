@@ -19,19 +19,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.note.guiavirtual.Equipos.AltaEquipo;
 import com.example.note.guiavirtual.Equipos.ConsultaEquipo;
 import com.example.note.guiavirtual.OTs.FragmentDefault;
+import com.example.note.guiavirtual.OTs.FragmentListaOTs;
 import com.example.note.guiavirtual.OTs.FragmentOTs;
+import com.example.note.guiavirtual.OTs.MisOTs;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, AltaEquipo.OnFragmentInteractionListener, ConsultaEquipo.OnFragmentInteractionListener , FragmentOTs.OnFragmentInteractionListener{
+        implements NavigationView.OnNavigationItemSelectedListener, AltaEquipo.OnFragmentInteractionListener, ConsultaEquipo.OnFragmentInteractionListener , FragmentOTs.OnFragmentInteractionListener, FragmentListaOTs.OnFragmentInteractionListener{
         int AuxuliarUsuMain,x,AuxuliarRolMain;
+        TextView textoRoll;
+    Menu menu;
 
-    TextView texto;
+
 
 
     @Override
@@ -42,7 +47,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-       // texto=(TextView)findViewById(R.id.textView19);
+        // texto=(TextView)findViewById(R.id.textView19);
         //texto.setText(AuxuliarUsu);
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -60,30 +65,44 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+       // textoRoll = (TextView) findViewById(R.id.nav_view);
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         RecibirDatos();
-        //EnviarDatos();
 
+        menu = navigationView.getMenu();
+        //menu2=navigationView.getMenu();
+
+        if (AuxuliarRolMain == 2) {
+            MenuItem alta = menu.findItem(R.id.nav_AltaEquipos);
+            MenuItem consulta = menu.findItem(R.id.nav_Cons);
+            alta.setVisible(false);
+            consulta.setVisible(false);
+            Toast.makeText(getApplicationContext(),"Bienvenido Enfermero",Toast.LENGTH_LONG).show();
+
+
+        } else if (AuxuliarRolMain == 3) {
+            MenuItem alta = menu.findItem(R.id.nav_AltaEquipos);
+            MenuItem consulta = menu.findItem(R.id.nav_Cons);
+            alta.setVisible(false);
+            consulta.setVisible(false);
+            Toast.makeText(getApplicationContext(),"Bienvenido Doctor",Toast.LENGTH_LONG).show();
+        } else if (AuxuliarRolMain == 0) {
+            Toast.makeText(getApplicationContext(),"Bienvenido Aministrador",Toast.LENGTH_LONG).show();
+
+        }else if (AuxuliarRolMain == 1) {
+            Toast.makeText(getApplicationContext(),"Bienvenido Técnico",Toast.LENGTH_LONG).show();
+
+        }
     }
-
-
-  /*  private void EnviarDatos() {
-        x=AuxuliarUsu;
-
-        FragmentOTs fragmentOTs=new FragmentOTs();
-
-        Bundle bundle = new Bundle();
-        bundle.putInt("SCORE",x);
-        fragmentOTs.setArguments(bundle);
-    }*/
 
     private void RecibirDatos() {
         Bundle extras = getIntent().getExtras();
         AuxuliarUsuMain=extras.getInt("Usuario");
         AuxuliarRolMain=extras.getInt("Rol");
-        //Toast.makeText(getApplicationContext(),"Usuario: "+AuxuliarUsuMain + "--- Rol: " + AuxuliarRolMain,Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(),"Usuario: "+AuxuliarUsuMain + "   Rol: " + AuxuliarRolMain,Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -122,21 +141,24 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+
         int id = item.getItemId();
 
         Fragment miFragment=null;
         boolean fragmentSeleccionado=false;
 
         if (id == R.id.nav_Guia) {
+            // Aplicación de realidad aumentada
 
-            // Handle the camera action
         } else if (id == R.id.nav_OTs) {
+            //Bajas y modificaciones de OTs
             miFragment=new FragmentOTs();
             fragmentSeleccionado=true;
 
         } else if (id == R.id.nav_ListaOT) {
-            miFragment=new FragmentDefault();
-            RecibirDatos();
+           //Listado de OTs pendientes
+
+            miFragment=new FragmentListaOTs();
             fragmentSeleccionado=true;
 
 
@@ -145,6 +167,7 @@ public class MainActivity extends AppCompatActivity
             fragmentSeleccionado=true;
 
         } else if (id == R.id.nav_Cons) {
+            //Consulta de equipos
             miFragment=new ConsultaEquipo();
             fragmentSeleccionado=true;
         }

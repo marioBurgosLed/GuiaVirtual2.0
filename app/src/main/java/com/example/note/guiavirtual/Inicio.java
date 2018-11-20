@@ -103,7 +103,7 @@ public class Inicio extends Activity {
 
                     }
                     if(j==1){
-                        Toast.makeText(getApplicationContext(),"Bienvenido usuario: "+ nombreUsuario + "  IdUsuario: "+auxUsuInicio,Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(),"Bienvenido usuario: "+ nombreUsuario + "  IdUsuario: "+auxUsuInicio,Toast.LENGTH_SHORT).show();
                         Intent intent=new Intent(Inicio.this,MainActivity.class);
                         intent.putExtra("Usuario",auxUsuInicio);
                         intent.putExtra("Rol",auxRolInicio);

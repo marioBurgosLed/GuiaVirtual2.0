@@ -1,19 +1,27 @@
 package com.example.note.guiavirtual.OTs;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import com.android.volley.Request;
+import com.android.volley.toolbox.*;
+
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -24,6 +32,7 @@ import com.example.note.guiavirtual.R;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import static org.json.JSONObject.NULL;
@@ -46,11 +55,13 @@ public class FragmentOTs extends Fragment implements Response.Listener<JSONObjec
     private String mParam1;
     private String mParam2;*/
 
-    EditText etIdEquipo,etDetalle, etFecha,etTipo, etEstado, etUsu;
+    EditText etIdEquipo, etDetalle, etFecha, etTipo, etEstado, etUsu;
     Button btEscanear, btGenerarOT;
     View rootView;
-    int dia,mes,anio;
-    int auxUsuFragment, auxUsuRol,x;
+    int dia, mes, anio;
+    int auxUsuFragment, auxUsuRol, x;
+
+    RecyclerView recycler;
 
     ProgressDialog progreso;
     RequestQueue request;
@@ -86,7 +97,8 @@ public class FragmentOTs extends Fragment implements Response.Listener<JSONObjec
           /*  mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);*/
             //auxUsuFragment=getArguments().getInt("SCORE",3);
-           // etUsu.setText(auxUsuFragment);
+            // etUsu.setText(auxUsuFragment);
+
         }
     }
 
@@ -96,21 +108,22 @@ public class FragmentOTs extends Fragment implements Response.Listener<JSONObjec
 
         //((MainActivity)getActivity()).setActionBarTitle("Menú Ordenes de Trabajo");
         // Inflate the layout for this fragment
-        View vista= inflater.inflate(R.layout.fragment_fragment_ots, container, false);
+        View vista = inflater.inflate(R.layout.fragment_fragment_ots, container, false);
 
-        etIdEquipo=(EditText) vista.findViewById(R.id.etIdEquipo);
-        etDetalle=(EditText) vista.findViewById(R.id.etDetalleOT);
-        etFecha=(EditText) vista.findViewById(R.id.etFechaOT);
-        etTipo=(EditText) vista.findViewById(R.id.etIdTipo);
-        etEstado=(EditText) vista.findViewById(R.id.etIdEstado);
-        etUsu=(EditText) vista.findViewById(R.id.etIdUsuario);
-        btEscanear=(Button) vista.findViewById(R.id.btScan);
-        btGenerarOT=(Button) vista.findViewById(R.id.btAltaOT);
+        etIdEquipo = (EditText) vista.findViewById(R.id.etIdEquipo);
+        etDetalle = (EditText) vista.findViewById(R.id.etDetalleOT);
+        etFecha = (EditText) vista.findViewById(R.id.etFechaOT);
+        etTipo = (EditText) vista.findViewById(R.id.etIdTipo);
+        etEstado = (EditText) vista.findViewById(R.id.etIdEstado);
+        etUsu = (EditText) vista.findViewById(R.id.etIdUsuario);
+        btEscanear = (Button) vista.findViewById(R.id.btScan);
+        btGenerarOT = (Button) vista.findViewById(R.id.btAltaOT);
+
 
         etEstado.setText("0");
         etTipo.setText("0");
 
-        request= Volley.newRequestQueue(getContext());
+        request = Volley.newRequestQueue(getContext());
 
         SharedPreferences prefs = getActivity().getSharedPreferences("Preferences", 0);
         auxUsuFragment = prefs.getInt("USUARIOSSS", 0);
@@ -119,8 +132,13 @@ public class FragmentOTs extends Fragment implements Response.Listener<JSONObjec
         btEscanear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(),"Recibió en Fragment..."+auxUsuFragment,Toast.LENGTH_LONG).show();
+                if (v.getId() == R.id.btScan) {
+                    //IntentIntegrator scanIntegrator = new IntentIntegrator((Activity) getContext());
+                    IntentIntegrator scanIntegrator = new IntentIntegrator((Activity) getContext());
+                    scanIntegrator.initiateScan();
+                    //etIdEquipo.setText("");
 
+                }
 
             }
         });
@@ -130,14 +148,14 @@ public class FragmentOTs extends Fragment implements Response.Listener<JSONObjec
             @Override
             public void onClick(View v) {
 
-                if(v==btGenerarOT){
-                    final Calendar c=Calendar.getInstance();
-                    dia=c.get(Calendar.DAY_OF_MONTH);
-                    mes=c.get(Calendar.MONTH);
-                    anio=c.get(Calendar.YEAR);
-                    etFecha.setText(anio+"-"+mes+"-"+dia);
+                if (v == btGenerarOT) {
+                    final Calendar c = Calendar.getInstance();
+                    dia = c.get(Calendar.DAY_OF_MONTH);
+                    mes = c.get(Calendar.MONTH);
+                    anio = c.get(Calendar.YEAR);
+                    etFecha.setText(anio + "-" + mes + "-" + dia);
 
-                   // etUsu.setText(auxUsuFragment);
+                    // etUsu.setText(auxUsuFragment);
                 }
                 GenerarOT();
             }
@@ -147,6 +165,23 @@ public class FragmentOTs extends Fragment implements Response.Listener<JSONObjec
         return vista;
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        int escaneado;
+
+        if (scanningResult != null) {
+            String scanContent = scanningResult.getContents();
+            escaneado = Integer.parseInt(scanningResult.getFormatName());
+
+            etIdEquipo.setText(scanContent);
+            //contentTxt.setText("CONTENT: " + scanContent);
+            Toast.makeText(getContext(),"Resultado..."+scanContent,Toast.LENGTH_LONG).show();
+
+        } else {
+            Toast.makeText(getContext(),"Escaneo fallido...",Toast.LENGTH_LONG).show();
+        }
+
+}
 
     private void GenerarOT() {
 
